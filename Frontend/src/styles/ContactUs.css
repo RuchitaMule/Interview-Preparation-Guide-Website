@@ -1,0 +1,118 @@
+/* Overall Page Styling */
+.contact-container {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(120deg, #f4f1de, #ffffff);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 15%;
+}
+
+/* Heading */
+.contact-container h2 {
+
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #1a237e;
+    font-weight: bold;
+}
+
+/* Contact Wrapper */
+.contact-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    max-width: 900px;
+    margin-top: 10px;
+    margin: auto;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Contact Form */
+.contact-form {
+    flex: 1;
+    min-width: 320px;
+    padding: 20px;
+
+}
+
+/* Input Fields */
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #dcdcdc;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: 0.3s;
+    background: #f9f9f9;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: #1a237e;
+    outline: none;
+    box-shadow: 0px 0px 8px rgba(26, 35, 126, 0.2);
+}
+
+/* Submit Button */
+.contact-form button {
+    width: 100%;
+    padding: 12px;
+    background: #1a237e;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.contact-form button:hover {
+    background: #283593;
+    transform: scale(1.03);
+}
+
+/* Contact Information */
+.contact-info {
+    flex: 1;
+    min-width: 280px;
+    text-align: left;
+    padding: 20px;
+    color: #1a237e;
+}
+
+.contact-info h3 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+}
+
+.contact-info p {
+    font-size: 1.1rem;
+    margin: 6px 0;
+}
+
+/* Icons Styling */
+.contact-info p strong {
+    color: #283593;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .contact-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .contact-form,
+    .contact-info {
+        min-width: 100%;
+    }
+}

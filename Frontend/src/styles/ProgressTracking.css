@@ -1,0 +1,161 @@
+.progress-container {
+    padding: 20px;
+    /* padding-top: 40%; */
+    color: #fff;
+    min-height: 100vh;
+
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+
+/* Card Layout - 2 Cards per Row */
+.card-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
+    gap: 20px;
+    margin: 20px 0;
+    padding-top: 80%;
+}
+
+/* Each Card */
+.progress-card {
+    flex: 0 1 calc(45% - 20px);
+    max-width: 400px;
+    background-color: #1c1c1c;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.progress-card:hover {
+    transform: scale(1.05);
+}
+
+/* Progress Bar Inside Card */
+.bar {
+    width: 100%;
+    height: 10px;
+    background-color: #444;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.fill {
+    height: 100%;
+    background-color: #00c3ff;
+    border-radius: 5px;
+}
+
+/* Modal Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-top: 10%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-content {
+    background: black;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+}
+
+/* Each Attempt Box in Modal */
+.attempt-box {
+    background: #0b0b0b;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.bar-container {
+    background-color: #ddd;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.bar-fill {
+    background-color: #00c3ff;
+    height: 100%;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+}
+
+/* Weekly Summary Section */
+.weekly-summary {
+    background: #fff;
+    color: #111;
+    padding: 20px;
+    margin-top: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Overall Growth Chart Styling */
+.growth-chart {
+    background: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    margin-bottom: 40px;
+    color: #111;
+}
+
+.modal-content {
+    animation: fadeInUp 0.3s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .progress-card {
+        flex: 0 1 90%;
+    }
+}

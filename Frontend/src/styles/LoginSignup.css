@@ -1,0 +1,196 @@
+/* Import Modern Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body {
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(120deg, #f4f1de, #ffffff);
+}
+
+/* Centered Container */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(70vh - 40px);
+    width: 100%;
+    padding-top: 80px;
+    /* Ensures space for navbar */
+}
+
+/* Elegant Form Box */
+.form-container {
+    background: white;
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.form-container:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Tab Buttons */
+.form-toggle {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.form-toggle button {
+    width: 50%;
+    padding: 12px;
+    background: #e9c46a;
+    /* Muted Sand */
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 10px 10px 0 0;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.form-toggle .active {
+    background: #005f73;
+    /* Deep Teal */
+    color: white;
+    font-weight: bold;
+}
+
+/* Form Styling */
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form h2 {
+    margin-bottom: 20px;
+    color: #005f73;
+    font-weight: bold;
+}
+
+/* Input Fields */
+.form input,
+.form select {
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #d0d6f9;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #f8f9fc;
+    color: #005f73;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form input::placeholder,
+.form select {
+    color: #6c757d;
+}
+
+.form input:focus,
+.form select:focus {
+    border-color: #005f73;
+    background: white;
+}
+
+/* Modern Button Style */
+.form button {
+    padding: 12px;
+    background: #005f73;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s ease-in-out;
+}
+
+.form button:hover {
+    background: #023e58;
+}
+
+/* Click Effect */
+.form button:active {
+    transform: scale(0.97);
+    transition: transform 0.1s ease-in-out;
+}
+
+/* Glow Effect */
+.form button:focus {
+    box-shadow: 0 0 10px rgba(0, 95, 115, 0.7);
+}
+
+/* Links & Text */
+.form p {
+    color: #6c757d;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.form a {
+    color: #005f73;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.form a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive for Smaller Screens */
+@media (max-width: 400px) {
+    .form-container {
+        width: 90%;
+        padding: 20px;
+    }
+}
+
+
+/* POP-UP NOTIFICATION */
+.popup {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #005f73;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    text-align: center;
+    z-index: 9999;
+    animation: fadeInOut 3s ease-in-out;
+}
+
+/* Fade in and fade out animation */
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px) translateX(-50%);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateY(0) translateX(-50%);
+    }
+
+    80% {
+        opacity: 1;
+        transform: translateY(0) translateX(-50%);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-20px) translateX(-50%);
+    }
+}

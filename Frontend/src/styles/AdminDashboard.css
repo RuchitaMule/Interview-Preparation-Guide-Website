@@ -1,0 +1,256 @@
+/* Admin Dashboard Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: #eef1f5;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, #1e3a5f, #12223a);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 22px;
+    font-weight: bold;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 10px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar li:hover,
+.sidebar .active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.logout {
+    margin-top: auto;
+    color: red;
+    font-weight: bold;
+}
+
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    margin-left: 250px;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #004d7a, #008793);
+    color: white;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 700px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4px);
+}
+
+.dashboard-header input {
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    width: 250px;
+}
+
+/* Stats Container (Updated to 2x2 Grid) */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 80%;
+    max-width: 700px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    min-width: 250px;
+}
+
+.stat-card h4 {
+    margin: 0;
+}
+
+.stat-card span {
+    font-size: 22px;
+    display: block;
+    margin-top: 10px;
+}
+
+.blue {
+    background: #007bff;
+    color: white;
+}
+
+.yellow {
+    background: #ffcc00;
+    color: white;
+}
+
+.navy {
+    background: #004d7a;
+    color: white;
+}
+
+.red {
+    background: #d9534f;
+    color: white;
+}
+
+/* Bottom Section (Other Content) */
+.bottom-content {
+    width: 90%;
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+.activity-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #fdfdfd;
+    border-radius: 12px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.activity-section h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #2c3e50;
+}
+
+.activity-tables {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.activity-table {
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+}
+
+.activity-table h4 {
+    margin-bottom: 10px;
+    color: #34495e;
+    font-size: 1.2rem;
+}
+
+.activity-table table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.activity-table th,
+.activity-table td {
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.activity-table th {
+    background-color: #f2f6fc;
+    color: #2c3e50;
+}
+
+.activity-table tr:hover {
+    background-color: #f9fbff;
+}
+
+
+.completed {
+    color: green;
+    font-weight: bold;
+}
+
+.scheduled {
+    color: orange;
+    font-weight: bold;
+}
+
+.contact-messages-section {
+    margin-top: 2rem;
+}
+
+.message-card {
+    background: #f5f5f5;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+}
+
+.message-card textarea {
+    width: 100%;
+    margin: 0.5rem 0;
+    min-height: 60px;
+}
+
+.message-card button {
+    background: #007bff;
+    color: white;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

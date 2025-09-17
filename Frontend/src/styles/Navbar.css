@@ -1,0 +1,91 @@
+/* Navbar Container */
+.navbar {
+    width: 100%;
+    padding: 15px 5%;
+    background: linear-gradient(90deg, #004d61, #009688);
+    /* Keeping original colors */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    overflow: hidden;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo Styling */
+.navbar .logo {
+    margin: 0;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+/* Navigation Links */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: nowrap;
+    /* Prevents breaking into multiple lines */
+    padding-right: 5%;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: 0.3s ease-in-out;
+    border-radius: 5px;
+}
+
+/* Active Page Styling */
+.nav-links a.active {
+    background-color: rgba(255, 255, 255, 0.3);
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Hover Effect */
+.nav-links a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+/* Login Button */
+.logout-btn {
+    background-color: #ff9800;
+    /* Keeping original button color */
+    padding: 8px 16px;
+    padding-right: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 14px;
+    white-space: nowrap;
+    /* Prevents text from wrapping */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.logout-btn:hover {
+    background-color: #ffac33;
+    transform: scale(1.1);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .nav-links {
+        gap: 10px;
+        /* Reduce gap for better fit */
+    }
+}

@@ -1,0 +1,130 @@
+.add-question-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px 40px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.add-question-container h2 {
+    margin-bottom: 25px;
+    color: #2c3e50;
+    text-align: center;
+    font-size: 26px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    /* optional, in case using flex layout */
+}
+
+.add-question-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "question question"
+        "option1 option2"
+        "option3 option4"
+        "correct correct"
+        "topic topic"
+        "difficulty explanation"
+        "button button";
+    gap: 15px;
+
+}
+
+.add-question-form label {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #333;
+}
+
+.add-question-form input,
+.add-question-form select,
+.add-question-form textarea {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+    /* margin-bottom: 10px; */
+}
+
+.add-question-form input:focus,
+.add-question-form select:focus,
+.add-question-form textarea:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.15);
+}
+
+.add-question-form textarea {
+    grid-column: 1 / -1;
+    resize: vertical;
+}
+
+.submit-btn {
+    grid-column: 1 / -1;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: #45a049;
+}
+
+.question-text {
+    grid-area: question;
+}
+
+.option-0 {
+    grid-area: option1;
+}
+
+.option-1 {
+    grid-area: option2;
+}
+
+.option-2 {
+    grid-area: option3;
+}
+
+.option-3 {
+    grid-area: option4;
+}
+
+.correct-answer {
+    grid-area: correct;
+}
+
+.topic {
+    grid-area: topic;
+}
+
+.difficulty {
+    grid-area: difficulty;
+}
+
+.explanation {
+    grid-area: explanation;
+}
+
+.submit-btn {
+    grid-area: button;
+}
