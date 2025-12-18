@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-deployment
-  namespace: "2401132_RuchitaMule"   # 🔁 change if needed
+  namespace: "2401132-ruchita"   # 🔁 change if needed
 spec:
   replicas: 1
   selector:

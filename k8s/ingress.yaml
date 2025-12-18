@@ -1,10 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: app-ingress
+  name: frontend-ingress
+  namespace: 2401132-ruchita
 spec:
   rules:
-    - host: interview.college.local
+    - host: interviewPrep.imcc.com
       http:
         paths:
           - path: /

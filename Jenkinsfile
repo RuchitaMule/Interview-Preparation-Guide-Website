@@ -6,6 +6,7 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
+
   - name: sonar-scanner
     image: sonarsource/sonar-scanner-cli
     command: ["cat"]
@@ -80,7 +81,7 @@ spec:
                               -Dsonar.host.url=http://my-sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 \
                               -Dsonar.login=$SONAR_TOKEN \
                               -Dsonar.sources=Frontend \
-                              -Dsonar.exclusions=*/node_modules/,/dist/,/build/*
+                              -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**
                         '''
                     }
                 }
@@ -128,6 +129,8 @@ spec:
                     dir('k8s') {
                         sh '''
                             kubectl apply -n 2401132-ruchita -f frontend-deployment.yaml
+                            kubectl apply -n 2401132-ruchita -f frontend-service.yaml
+                            kubectl apply -n 2401132-ruchita -f ingress.yaml
                         '''
                     }
                 }

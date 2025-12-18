@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-deployment
-  namespace: "2401132_RuchitaMule"   # 🔁 change if your teacher gave a different one
+  namespace: "2401132-ruchita"   # 🔁 change if your teacher gave a different one
 spec:
   replicas: 1
   selector:
