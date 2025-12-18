@@ -70,7 +70,8 @@ spec:
                     withCredentials([string(credentialsId: 'sonar_token_2401132', variable: 'SONAR_TOKEN')]) {
                         sh '''
                             sonar-scanner \
-                              -Dsonar.projectKey=InterviewPrepGuide \
+                              -Dsonar.projectKey=2401132_InterviewPrep \
+                              -Dsonar.projectName=2401132_InterviewPrep \
                               -Dsonar.host.url=http://my-sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 \
                               -Dsonar.login=$SONAR_TOKEN \
                               -Dsonar.sources=./Frontend \
