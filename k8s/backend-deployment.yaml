@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-deployment
+  namespace: "2401132_RuchitaMule"   # 🔁 change if your teacher gave a different one
 spec:
   replicas: 1
   selector:
@@ -12,9 +13,12 @@ spec:
       labels:
         app: backend
     spec:
+      imagePullSecrets:
+        - name: nexus-secret   # 🔑 REQUIRED
       containers:
         - name: backend
           image: nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-backend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           env:

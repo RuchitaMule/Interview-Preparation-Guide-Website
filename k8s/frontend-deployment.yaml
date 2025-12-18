@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-deployment
+  namespace: "2401132_RuchitaMule"   # 🔁 change if needed
 spec:
   replicas: 1
   selector:
@@ -12,8 +13,11 @@ spec:
       labels:
         app: frontend
     spec:
+      imagePullSecrets:
+        - name: nexus-secret   # 🔑 REQUIRED
       containers:
         - name: frontend
           image: nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
