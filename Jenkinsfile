@@ -32,7 +32,7 @@ spec:
         REGISTRY = "nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085"
         BACKEND_IMAGE = "interview-backend"
         FRONTEND_IMAGE = "interview-frontend"
-        PROJECT_NAMESPACE = "2401132_RuchitaMule"   
+        PROJECT_NAMESPACE = "2401132_RuchitaMule"
     }
 
     stages {
@@ -47,6 +47,15 @@ spec:
             steps {
                 container('dind') {
                     sh '''
+                        echo "Starting Docker daemon..."
+                        dockerd > /tmp/dockerd.log 2>&1 &
+
+                        echo "Waiting for Docker daemon..."
+                        sleep 15
+
+                        docker info
+
+                        echo "Building backend image..."
                         docker build -t ${BACKEND_IMAGE}:latest ./backend
                         docker images
                     '''
@@ -58,6 +67,7 @@ spec:
             steps {
                 container('dind') {
                     sh '''
+                        echo "Building frontend image..."
                         docker build -t ${FRONTEND_IMAGE}:latest ./frontend
                         docker images
                     '''
@@ -86,6 +96,7 @@ spec:
             steps {
                 container('dind') {
                     sh '''
+                        echo "Logging into Nexus..."
                         docker login ${REGISTRY} -u admin -p Changeme@2025
                     '''
                 }
@@ -96,9 +107,11 @@ spec:
             steps {
                 container('dind') {
                     sh '''
+                        echo "Tagging images..."
                         docker tag ${BACKEND_IMAGE}:latest ${REGISTRY}/${BACKEND_IMAGE}:latest
                         docker tag ${FRONTEND_IMAGE}:latest ${REGISTRY}/${FRONTEND_IMAGE}:latest
 
+                        echo "Pushing images..."
                         docker push ${REGISTRY}/${BACKEND_IMAGE}:latest
                         docker push ${REGISTRY}/${FRONTEND_IMAGE}:latest
                     '''
@@ -110,6 +123,7 @@ spec:
             steps {
                 container('kubectl') {
                     sh '''
+                        echo "Deploying to Kubernetes..."
                         kubectl apply -f k8s/
                     '''
                 }
