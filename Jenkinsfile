@@ -61,7 +61,7 @@ spec:
                         docker info
 
                         echo "Building frontend image..."
-                        docker build -t ${FRONTEND_IMAGE}:latest ./frontend
+                        docker build -t ${FRONTEND_IMAGE}:latest ./Frontend
                         docker images
                     '''
                 }
