@@ -65,7 +65,10 @@ Thumbs.db
 # Optional (only if not needed in repo)
 # ===================================
 # scripts/   # Uncomment if your scripts folder is for local-only stuff
+
 # ===================================
 # SonarQube
 # ===================================
 .scannerwork/
+
+
