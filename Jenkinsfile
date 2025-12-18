@@ -6,58 +6,61 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-  - name: dind
-    image: docker:24-dind
-    securityContext:
-      privileged: true
-    env:
-    - name: DOCKER_TLS_CERTDIR
-      value: ""
+  - name: sonar-scanner
+    image: sonarsource/sonar-scanner-cli
+    command: ["cat"]
+    tty: true
 
   - name: kubectl
     image: bitnami/kubectl:latest
     command: ["cat"]
     tty: true
+    securityContext:
+      runAsUser: 0
+      readOnlyRootFilesystem: false
+    env:
+    - name: KUBECONFIG
+      value: /kube/config
+    volumeMounts:
+    - name: kubeconfig-secret
+      mountPath: /kube/config
+      subPath: kubeconfig
 
-  - name: sonar-scanner
-    image: sonarsource/sonar-scanner-cli
-    command: ["cat"]
-    tty: true
+  - name: dind
+    image: docker:dind
+    securityContext:
+      privileged: true
+    env:
+    - name: DOCKER_TLS_CERTDIR
+      value: ""
+    volumeMounts:
+    - name: docker-config
+      mountPath: /etc/docker/daemon.json
+      subPath: daemon.json
+
+  volumes:
+  - name: docker-config
+    configMap:
+      name: docker-daemon-config
+  - name: kubeconfig-secret
+    secret:
+      secretName: kubeconfig-secret
 '''
         }
     }
 
-    environment {
-        REGISTRY = "nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085"
-        FRONTEND_IMAGE = "interview-frontend"
-    }
-
     stages {
 
-        stage('Checkout Code') {
-            steps {
-                checkout scm
-            }
-        }
-
-        stage('Start Docker Daemon') {
+        stage('Build Frontend Docker Image') {
             steps {
                 container('dind') {
                     sh '''
-                        echo "Starting Docker daemon..."
-                        dockerd > /tmp/dockerd.log 2>&1 &
-                        sleep 20
+                        echo "Waiting for Docker daemon..."
+                        sleep 15
                         docker info
-                    '''
-                }
-            }
-        }
 
-        stage('Build Frontend Image') {
-            steps {
-                container('dind') {
-                    sh '''
-                        docker build -t ${FRONTEND_IMAGE}:latest ./Frontend
+                        echo "Building frontend Docker image..."
+                        docker build -t interview-frontend:latest ./Frontend
                         docker images
                     '''
                 }
@@ -67,37 +70,53 @@ spec:
         stage('SonarQube Analysis') {
             steps {
                 container('sonar-scanner') {
-                    withCredentials([string(credentialsId: 'sonar_token_2401132', variable: 'SONAR_TOKEN')]) {
+                    withCredentials([
+                        string(credentialsId: 'sonar_token_2401132', variable: 'SONAR_TOKEN')
+                    ]) {
                         sh '''
                             sonar-scanner \
                               -Dsonar.projectKey=2401132_InterviewPrep \
                               -Dsonar.projectName=2401132_InterviewPrep \
                               -Dsonar.host.url=http://my-sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 \
                               -Dsonar.login=$SONAR_TOKEN \
-                              -Dsonar.sources=./Frontend \
-                              -Dsonar.exclusions=**/node_modules/**
+                              -Dsonar.sources=Frontend \
+                              -Dsonar.exclusions=*/node_modules/,/dist/,/build/*
                         '''
                     }
                 }
             }
         }
 
-        stage('Login to Nexus') {
+        stage('Login to Nexus Registry') {
             steps {
                 container('dind') {
                     sh '''
-                        docker login ${REGISTRY} -u admin -p Changeme@2025
+                        docker login nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085 \
+                          -u admin -p Changeme@2025
                     '''
                 }
             }
         }
 
-        stage('Push Frontend Image') {
+        stage('Tag & Push Frontend Image') {
             steps {
                 container('dind') {
                     sh '''
-                        docker tag ${FRONTEND_IMAGE}:latest ${REGISTRY}/${FRONTEND_IMAGE}:latest
-                        docker push ${REGISTRY}/${FRONTEND_IMAGE}:latest
+                        docker tag interview-frontend:latest \
+                          nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-frontend:latest
+
+                        docker push nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-frontend:latest
+                    '''
+                }
+            }
+        }
+
+        stage('Create Namespace') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        kubectl get namespace 2401132-ruchita || \
+                        kubectl create namespace 2401132-ruchita
                     '''
                 }
             }
@@ -106,9 +125,11 @@ spec:
         stage('Deploy Frontend to Kubernetes') {
             steps {
                 container('kubectl') {
-                    sh '''
-                        kubectl apply -f k8s/frontend-deployment.yaml
-                    '''
+                    dir('k8s') {
+                        sh '''
+                            kubectl apply -n 2401132-ruchita -f frontend-deployment.yaml
+                        '''
+                    }
                 }
             }
         }
