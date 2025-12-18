@@ -30,7 +30,6 @@ spec:
 
     environment {
         REGISTRY = "nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085"
-        BACKEND_IMAGE = "interview-backend"
         FRONTEND_IMAGE = "interview-frontend"
         PROJECT_NAMESPACE = "2401132_RuchitaMule"
     }
@@ -45,6 +44,12 @@ spec:
 
         stage('Build Backend Image') {
             steps {
+                echo "......................................................"
+            }
+        }
+
+        stage('Build Frontend Image') {
+            steps {
                 container('dind') {
                     sh '''
                         echo "Starting Docker daemon..."
@@ -55,18 +60,6 @@ spec:
 
                         docker info
 
-                        echo "Building backend image..."
-                        docker build -t ${BACKEND_IMAGE}:latest ./backend
-                        docker images
-                    '''
-                }
-            }
-        }
-
-        stage('Build Frontend Image') {
-            steps {
-                container('dind') {
-                    sh '''
                         echo "Building frontend image..."
                         docker build -t ${FRONTEND_IMAGE}:latest ./frontend
                         docker images
@@ -81,11 +74,11 @@ spec:
                     withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
                         sh '''
                             sonar-scanner \
-                              -Dsonar.projectKey=InterviewPrepGuide \
+                              -Dsonar.projectKey=InterviewPrepGuide-Frontend \
                               -Dsonar.host.url=http://my-sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 \
                               -Dsonar.login=$SONAR_TOKEN \
-                              -Dsonar.sources=./ \
-                              -Dsonar.exclusions=**/node_modules/**,**/dist/**
+                              -Dsonar.sources=frontend \
+                              -Dsonar.exclusions=**/node_modules/**,**/build/**
                         '''
                     }
                 }
@@ -103,28 +96,26 @@ spec:
             }
         }
 
-        stage('Tag & Push Images') {
+        stage('Tag & Push Frontend Image') {
             steps {
                 container('dind') {
                     sh '''
-                        echo "Tagging images..."
-                        docker tag ${BACKEND_IMAGE}:latest ${REGISTRY}/${BACKEND_IMAGE}:latest
+                        echo "Tagging frontend image..."
                         docker tag ${FRONTEND_IMAGE}:latest ${REGISTRY}/${FRONTEND_IMAGE}:latest
 
-                        echo "Pushing images..."
-                        docker push ${REGISTRY}/${BACKEND_IMAGE}:latest
+                        echo "Pushing frontend image..."
                         docker push ${REGISTRY}/${FRONTEND_IMAGE}:latest
                     '''
                 }
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy Frontend to Kubernetes') {
             steps {
                 container('kubectl') {
                     sh '''
-                        echo "Deploying to Kubernetes..."
-                        kubectl apply -f k8s/
+                        echo "Deploying frontend to Kubernetes..."
+                        kubectl apply -f k8s/frontend-deployment.yaml
                     '''
                 }
             }
