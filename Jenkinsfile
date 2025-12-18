@@ -6,9 +6,8 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
-
   - name: dind
-    image: docker:dind
+    image: docker:24-dind
     securityContext:
       privileged: true
     env:
@@ -31,7 +30,6 @@ spec:
     environment {
         REGISTRY = "nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085"
         FRONTEND_IMAGE = "interview-frontend"
-        PROJECT_NAMESPACE = "2401132_RuchitaMule"
     }
 
     stages {
@@ -42,9 +40,16 @@ spec:
             }
         }
 
-        stage('Build Backend Image') {
+        stage('Start Docker Daemon') {
             steps {
-                echo "......................................................"
+                container('dind') {
+                    sh '''
+                        echo "Starting Docker daemon..."
+                        dockerd > /tmp/dockerd.log 2>&1 &
+                        sleep 20
+                        docker info
+                    '''
+                }
             }
         }
 
@@ -52,15 +57,6 @@ spec:
             steps {
                 container('dind') {
                     sh '''
-                        echo "Starting Docker daemon..."
-                        dockerd > /tmp/dockerd.log 2>&1 &
-
-                        echo "Waiting for Docker daemon..."
-                        sleep 15
-
-                        docker info
-
-                        echo "Building frontend image..."
                         docker build -t ${FRONTEND_IMAGE}:latest ./Frontend
                         docker images
                     '''
@@ -71,14 +67,14 @@ spec:
         stage('SonarQube Analysis') {
             steps {
                 container('sonar-scanner') {
-                    withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'sonar_token_2401132', variable: 'SONAR_TOKEN')]) {
                         sh '''
                             sonar-scanner \
-                              -Dsonar.projectKey=InterviewPrepGuide-Frontend \
+                              -Dsonar.projectKey=InterviewPrepGuide \
                               -Dsonar.host.url=http://my-sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 \
                               -Dsonar.login=$SONAR_TOKEN \
-                              -Dsonar.sources=frontend \
-                              -Dsonar.exclusions=**/node_modules/**,**/build/**
+                              -Dsonar.sources=./Frontend \
+                              -Dsonar.exclusions=**/node_modules/**
                         '''
                     }
                 }
@@ -89,21 +85,17 @@ spec:
             steps {
                 container('dind') {
                     sh '''
-                        echo "Logging into Nexus..."
                         docker login ${REGISTRY} -u admin -p Changeme@2025
                     '''
                 }
             }
         }
 
-        stage('Tag & Push Frontend Image') {
+        stage('Push Frontend Image') {
             steps {
                 container('dind') {
                     sh '''
-                        echo "Tagging frontend image..."
                         docker tag ${FRONTEND_IMAGE}:latest ${REGISTRY}/${FRONTEND_IMAGE}:latest
-
-                        echo "Pushing frontend image..."
                         docker push ${REGISTRY}/${FRONTEND_IMAGE}:latest
                     '''
                 }
@@ -114,7 +106,6 @@ spec:
             steps {
                 container('kubectl') {
                     sh '''
-                        echo "Deploying frontend to Kubernetes..."
                         kubectl apply -f k8s/frontend-deployment.yaml
                     '''
                 }
