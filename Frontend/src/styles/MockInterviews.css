@@ -1,0 +1,121 @@
+.mock-interview-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Headings and prompts */
+.mock-interview-container h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1e3a8a;
+    text-align: center;
+}
+
+.mock-interview-container p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    color: #374151;
+    text-align: center;
+}
+
+/* Question box */
+.question-card {
+    background-color: #f9fafb;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
+}
+
+.question-card p {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Timer display */
+.timer {
+    font-size: 1rem;
+    color: #dc2626;
+    font-weight: bold;
+    text-align: right;
+    margin-bottom: 10px;
+}
+
+/* Answer textarea */
+textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+    resize: vertical;
+    background-color: #ffffff;
+    transition: border 0.2s;
+}
+
+textarea:focus {
+    border-color: #2563eb;
+    outline: none;
+}
+
+/* Button styles */
+.btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.start-btn {
+    background-color: #2563eb;
+    color: white;
+}
+
+.start-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.cancel-btn {
+    background-color: #ef4444;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #dc2626;
+}
+
+.next-btn {
+    background-color: #10b981;
+    color: white;
+}
+
+.next-btn:hover {
+    background-color: #059669;
+}
+
+/* Button group */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Success message */
+.success-message {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #059669;
+    margin-top: 20px;
+
+}

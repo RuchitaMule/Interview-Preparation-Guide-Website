@@ -1,0 +1,81 @@
+/* Features container */
+.features-container {
+    text-align: center;
+    padding: 80px 5% 50px;
+    background-color: linear-gradient(120deg, #f4f1de, #ffffff);
+    justify-content: center;
+    padding-top: 20%;
+
+}
+
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+    margin: 20px auto;
+    justify-content: center;
+}
+
+
+/* Feature card styling */
+.feature-card {
+    /* background: white; */
+    background: linear-gradient(120deg, #f4f1de, #ffffff);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+
+}
+
+/* Hover effect */
+.feature-card:hover {
+    transform: scale(1.05);
+}
+
+/* Feature icon styling */
+.feature-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Feature title */
+.feature-card h2 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #004d40;
+}
+
+/* Feature description */
+.feature-card p {
+    font-size: 14px;
+    color: #333;
+}
+
+/* ✅ Ensure last two cards are aligned properly */
+.features-grid .feature-card:nth-last-child(2),
+.features-grid .feature-card:nth-last-child(1) {
+    grid-column: span 1;
+    /* Each card takes 1 column */
+    justify-self: center;
+    /* Center them horizontally */
+}
+
+/* ✅ Responsive adjustments */
+@media (max-width: 1024px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 cards per row */
+    }
+}
+
+@media (max-width: 768px) {
+    .features-grid {
+        grid-template-columns: repeat(1, 1fr);
+        /* 1 card per row */
+    }
+}

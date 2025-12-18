@@ -1,0 +1,71 @@
+# ===================================
+# Node.js dependencies
+# ===================================
+node_modules/
+
+# ===================================
+# Environment variables (keep secrets safe)
+# ===================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ===================================
+# Logs
+# ===================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ===================================
+# Build output
+# ===================================
+/dist
+/build
+
+# Next.js / React builds
+.next
+out/
+
+# ===================================
+# Test coverage
+# ===================================
+coverage/
+.nyc_output
+*.lcov
+
+# ===================================
+# Cache and temp
+# ===================================
+.cache
+.parcel-cache
+.tmp/
+
+# ===================================
+# Editor/IDE settings
+# ===================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.iml
+
+# ===================================
+# OS-specific files
+# ===================================
+.DS_Store
+Thumbs.db
+
+# ===================================
+# Optional (only if not needed in repo)
+# ===================================
+# scripts/   # Uncomment if your scripts folder is for local-only stuff
+# ===================================
+# SonarQube
+# ===================================
+.scannerwork/

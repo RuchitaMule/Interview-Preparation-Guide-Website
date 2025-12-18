@@ -1,0 +1,42 @@
+services:
+  backend:
+    build: ./backend
+    container_name: my-backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    env_file:
+      - ./backend/.env   # ✅ load env variables from backend/.env
+    environment:
+      - PORT=5000
+    volumes:
+      - ./backend:/app          # bind your code
+      - /app/node_modules
+
+  frontend:
+    build: ./frontend
+    container_name: my-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo:6
+    container_name: my-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: my-sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+
+volumes:
+  mongo-data:
