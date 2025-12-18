@@ -136,5 +136,30 @@ spec:
                 }
             }
         }
+
+        stage('Verify Frontend') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        echo "===== POD STATUS ====="
+                        kubectl get pods -n 2401132-ruchita
+
+                        echo "===== SERVICE STATUS ====="
+                        kubectl get svc -n 2401132-ruchita
+                    '''
+                }
+            }
+        }
+
+        stage('Verify Ingress') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        echo "===== INGRESS STATUS ====="
+                        kubectl get ingress -n 2401132-ruchita
+                    '''
+                }
+            }
+        }
     }
 }
