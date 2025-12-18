@@ -5,7 +5,7 @@ metadata:
   namespace: 2401132-ruchita
 spec:
   rules:
-    - host: interviewPrep.imcc.com
+    - host: interviewprep.imcc.com
       http:
         paths:
           - path: /
