@@ -17,8 +17,7 @@ spec:
         - name: nexus-secret   # 🔑 REQUIRED
       containers:
         - name: frontend
-          image: 192.168.20.250:30085/interview-frontend:latest
-
+          image: nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-frontend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80

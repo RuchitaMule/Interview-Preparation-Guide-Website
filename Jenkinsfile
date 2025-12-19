@@ -55,11 +55,8 @@ spec:
             steps {
                 container('dind') {
                     sh '''
-                        echo "Waiting for Docker..."
                         sleep 15
                         docker info
-
-                        echo "Building frontend image..."
                         docker build -t interview-frontend:latest ./Frontend
                         docker images
                     '''
@@ -91,7 +88,7 @@ spec:
             steps {
                 container('dind') {
                     sh '''
-                        docker login 192.168.20.250:30085 \
+                        docker login nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085 \
                           -u admin -p Changeme@2025
                     '''
                 }
@@ -103,9 +100,8 @@ spec:
                 container('dind') {
                     sh '''
                         docker tag interview-frontend:latest \
-                          192.168.20.250:30085/interview-frontend:latest
-
-                        docker push 192.168.20.250:30085/interview-frontend:latest
+                          nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-frontend:latest
+                        docker push nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-frontend:latest
                     '''
                 }
             }
@@ -126,7 +122,7 @@ spec:
                 container('kubectl') {
                     sh '''
                         kubectl create secret docker-registry nexus-secret \
-                          --docker-server=192.168.20.250:30085 \
+                          --docker-server=nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085 \
                           --docker-username=admin \
                           --docker-password=Changeme@2025 \
                           --docker-email=student@imcc.com \
@@ -141,8 +137,8 @@ spec:
                 container('kubectl') {
                     sh '''
                         kubectl patch serviceaccount default \
-                          -n 2401132-ruchita \
-                          -p '{"imagePullSecrets":[{"name":"nexus-secret"}]}'
+                        -n 2401132-ruchita \
+                        -p '{"imagePullSecrets":[{"name":"nexus-secret"}]}'
                     '''
                 }
             }
@@ -172,7 +168,25 @@ spec:
             }
         }
 
-        stage('Verify Pod Status') {
+        // 🔍 VERIFICATION STAGES (THIS GETS YOU 1/1)
+
+        stage('Verify Image & Secret Registry URL') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        echo "IMAGE USED:"
+                        kubectl get deploy frontend-deployment -n 2401132-ruchita \
+                        -o jsonpath="{.spec.template.spec.containers[0].image}"
+                        echo ""
+                        echo "SECRET REGISTRY:"
+                        kubectl get secret nexus-secret -n 2401132-ruchita \
+                        -o jsonpath="{.data.\\.dockerconfigjson}" | base64 -d
+                    '''
+                }
+            }
+        }
+
+        stage('Verify Pod Status & Errors') {
             steps {
                 container('kubectl') {
                     sh '''
