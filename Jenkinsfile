@@ -139,6 +139,20 @@ spec:
             }
         }
 
+        stage('Attach ImagePullSecret to ServiceAccount') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        echo "Attaching nexus-secret to default service account..."
+                        kubectl patch serviceaccount default \
+                        -n 2401132-ruchita \
+                        -p '{"imagePullSecrets":[{"name":"nexus-secret"}]}'
+                    '''
+                }
+            }
+        }
+
+
         stage('Force Restart Frontend Pod') {
             steps {
                 container('kubectl') {
