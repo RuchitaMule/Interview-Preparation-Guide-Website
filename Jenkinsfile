@@ -58,7 +58,6 @@ spec:
                         sleep 15
                         docker info
                         docker build -t interview-frontend:latest ./Frontend
-                        docker images
                     '''
                 }
             }
@@ -84,12 +83,11 @@ spec:
             }
         }
 
-        stage('Login to Nexus Registry') {
+        stage('Login to Nexus (NodePort)') {
             steps {
                 container('dind') {
                     sh '''
-                        docker login nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085 \
-                          -u admin -p Changeme@2025
+                        docker login 127.0.0.1:30085 -u admin -p Changeme@2025
                     '''
                 }
             }
@@ -99,9 +97,8 @@ spec:
             steps {
                 container('dind') {
                     sh '''
-                        docker tag interview-frontend:latest \
-                          nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-frontend:latest
-                        docker push nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-frontend:latest
+                        docker tag interview-frontend:latest 127.0.0.1:30085/interview-frontend:latest
+                        docker push 127.0.0.1:30085/interview-frontend:latest
                     '''
                 }
             }
@@ -117,12 +114,12 @@ spec:
             }
         }
 
-        stage('Create Nexus ImagePull Secret') {
+        stage('Create ImagePull Secret') {
             steps {
                 container('kubectl') {
                     sh '''
                         kubectl create secret docker-registry nexus-secret \
-                          --docker-server=nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085 \
+                          --docker-server=127.0.0.1:30085 \
                           --docker-username=admin \
                           --docker-password=Changeme@2025 \
                           --docker-email=student@imcc.com \
@@ -158,7 +155,7 @@ spec:
             }
         }
 
-        stage('Force Pod Restart') {
+        stage('Restart Pod') {
             steps {
                 container('kubectl') {
                     sh '''
@@ -168,39 +165,11 @@ spec:
             }
         }
 
-        // 🔍 VERIFICATION STAGES (THIS GETS YOU 1/1)
-
-        stage('Verify Image & Secret Registry URL') {
-            steps {
-                container('kubectl') {
-                    sh '''
-                        echo "IMAGE USED:"
-                        kubectl get deploy frontend-deployment -n 2401132-ruchita \
-                        -o jsonpath="{.spec.template.spec.containers[0].image}"
-                        echo ""
-                        echo "SECRET REGISTRY:"
-                        kubectl get secret nexus-secret -n 2401132-ruchita \
-                        -o jsonpath="{.data.\\.dockerconfigjson}" | base64 -d
-                    '''
-                }
-            }
-        }
-
-        stage('Verify Pod Status & Errors') {
+        stage('Verify') {
             steps {
                 container('kubectl') {
                     sh '''
                         kubectl get pods -n 2401132-ruchita
-                        kubectl describe pod -n 2401132-ruchita -l app=frontend
-                    '''
-                }
-            }
-        }
-
-        stage('Verify Ingress') {
-            steps {
-                container('kubectl') {
-                    sh '''
                         kubectl get ingress -n 2401132-ruchita
                     '''
                 }
