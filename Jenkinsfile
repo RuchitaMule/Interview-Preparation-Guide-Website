@@ -139,6 +139,18 @@ spec:
             }
         }
 
+        stage('Force Restart Frontend Pod') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        echo "Deleting old frontend pod to fix ImagePullBackOff..."
+                        kubectl delete pod -n 2401132-ruchita -l app=frontend || true
+                    '''
+                }
+            }
+        }
+
+
         stage('Deploy Frontend to Kubernetes') {
             steps {
                 container('kubectl') {
