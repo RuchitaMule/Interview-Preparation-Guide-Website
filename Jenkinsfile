@@ -123,6 +123,22 @@ spec:
             }
         }
 
+        // ✅ MOST IMPORTANT FIX (ImagePullBackOff SOLUTION)
+        stage('Create Nexus ImagePull Secret') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        kubectl create secret docker-registry nexus-secret \
+                          --docker-server=nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085 \
+                          --docker-username=admin \
+                          --docker-password=Changeme@2025 \
+                          --docker-email=student@imcc.com \
+                          -n 2401132-ruchita || true
+                    '''
+                }
+            }
+        }
+
         stage('Deploy Frontend to Kubernetes') {
             steps {
                 container('kubectl') {
@@ -157,18 +173,6 @@ spec:
                     sh '''
                         echo "===== INGRESS STATUS ====="
                         kubectl get ingress -n 2401132-ruchita
-                    '''
-                }
-            }
-        }
-
-        // 🔴 DEBUG STAGE (TEMPORARY)
-        stage('Debug Frontend Pod') {
-            steps {
-                container('kubectl') {
-                    sh '''
-                        echo "===== DEBUG POD DETAILS ====="
-                        kubectl describe pod -n 2401132-ruchita -l app=frontend
                     '''
                 }
             }
