@@ -6,6 +6,7 @@ apiVersion: v1
 kind: Pod
 spec:
   containers:
+
   - name: sonar-scanner
     image: sonarsource/sonar-scanner-cli
     command: ["cat"]
@@ -55,8 +56,11 @@ spec:
             steps {
                 container('dind') {
                     sh '''
+                        echo "Waiting for Docker daemon..."
                         sleep 15
                         docker info
+
+                        echo "Building frontend Docker image..."
                         docker build -t interview-frontend:latest ./Frontend
                         docker images
                     '''
@@ -75,7 +79,7 @@ spec:
                               -Dsonar.projectKey=2401132_InterviewPrep \
                               -Dsonar.projectName=2401132_InterviewPrep \
                               -Dsonar.host.url=http://my-sonarqube-sonarqube.sonarqube.svc.cluster.local:9000 \
-                              -Dsonar.token=$SONAR_TOKEN \
+                              -Dsonar.login=$SONAR_TOKEN \
                               -Dsonar.sources=Frontend \
                               -Dsonar.exclusions=**/node_modules/**,**/dist/**,**/build/**
                         '''
@@ -95,12 +99,13 @@ spec:
             }
         }
 
-        stage('Tag & Push Image') {
+        stage('Tag & Push Frontend Image') {
             steps {
                 container('dind') {
                     sh '''
                         docker tag interview-frontend:latest \
                           nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-frontend:latest
+
                         docker push nexus-service-for-docker-hosted-registry.nexus.svc.cluster.local:8085/interview-frontend:latest
                     '''
                 }
@@ -111,12 +116,14 @@ spec:
             steps {
                 container('kubectl') {
                     sh '''
-                        kubectl get ns 2401132-ruchita || kubectl create ns 2401132-ruchita
+                        kubectl get namespace 2401132-ruchita || \
+                        kubectl create namespace 2401132-ruchita
                     '''
                 }
             }
         }
 
+        // ✅ MOST IMPORTANT FIX (ImagePullBackOff SOLUTION)
         stage('Create Nexus ImagePull Secret') {
             steps {
                 container('kubectl') {
@@ -132,19 +139,33 @@ spec:
             }
         }
 
-        stage('Attach Secret to ServiceAccount') {
+        stage('Attach ImagePullSecret to ServiceAccount') {
+        steps {
+            container('kubectl') {
+                sh '''
+                    echo "Attaching nexus-secret to default service account..."
+                    kubectl patch serviceaccount default \
+                    -n 2401132-ruchita \
+                    -p '{"imagePullSecrets":[{"name":"nexus-secret"}]}'
+                '''
+            }
+        }
+    }
+
+
+        stage('Force Restart Frontend Pod') {
             steps {
                 container('kubectl') {
                     sh '''
-                        kubectl patch serviceaccount default \
-                        -n 2401132-ruchita \
-                        -p '{"imagePullSecrets":[{"name":"nexus-secret"}]}'
+                        echo "Deleting old frontend pod to fix ImagePullBackOff..."
+                        kubectl delete pod -n 2401132-ruchita -l app=frontend || true
                     '''
                 }
             }
         }
 
-        stage('Deploy Frontend') {
+
+        stage('Deploy Frontend to Kubernetes') {
             steps {
                 container('kubectl') {
                     dir('k8s') {
@@ -158,40 +179,15 @@ spec:
             }
         }
 
-        stage('Force Pod Restart') {
+        stage('Verify Frontend') {
             steps {
                 container('kubectl') {
                     sh '''
-                        kubectl delete pod -n 2401132-ruchita -l app=frontend || true
-                    '''
-                }
-            }
-        }
-
-        // 🔍 VERIFICATION STAGES (THIS GETS YOU 1/1)
-
-        stage('Verify Image & Secret Registry URL') {
-            steps {
-                container('kubectl') {
-                    sh '''
-                        echo "IMAGE USED:"
-                        kubectl get deploy frontend-deployment -n 2401132-ruchita \
-                        -o jsonpath="{.spec.template.spec.containers[0].image}"
-                        echo ""
-                        echo "SECRET REGISTRY:"
-                        kubectl get secret nexus-secret -n 2401132-ruchita \
-                        -o jsonpath="{.data.\\.dockerconfigjson}" | base64 -d
-                    '''
-                }
-            }
-        }
-
-        stage('Verify Pod Status & Errors') {
-            steps {
-                container('kubectl') {
-                    sh '''
+                        echo "===== POD STATUS ====="
                         kubectl get pods -n 2401132-ruchita
-                        kubectl describe pod -n 2401132-ruchita -l app=frontend
+
+                        echo "===== SERVICE STATUS ====="
+                        kubectl get svc -n 2401132-ruchita
                     '''
                 }
             }
@@ -201,6 +197,7 @@ spec:
             steps {
                 container('kubectl') {
                     sh '''
+                        echo "===== INGRESS STATUS ====="
                         kubectl get ingress -n 2401132-ruchita
                     '''
                 }
