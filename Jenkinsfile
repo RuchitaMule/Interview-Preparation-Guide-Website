@@ -161,5 +161,17 @@ spec:
                 }
             }
         }
+
+        // 🔴 DEBUG STAGE (TEMPORARY)
+        stage('Debug Frontend Pod') {
+            steps {
+                container('kubectl') {
+                    sh '''
+                        echo "===== DEBUG POD DETAILS ====="
+                        kubectl describe pod -n 2401132-ruchita -l app=frontend
+                    '''
+                }
+            }
+        }
     }
 }
